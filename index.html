@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#090b12">
 <link rel="manifest" href="manifest.webmanifest">
-<title>LEVEL UP Signals PRO 3.1</title>
+<title>LEVEL UP Signals PRO 4.0</title>
 <style>
 :root{--bg:#080a10;--line:#2b3b51;--txt:#eef4ff;--muted:#96a5ba;--green:#39e66b;--red:#ff5968;--gold:#e8bd70;--blue:#6eb6ff}
 *{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at top,#162840,#080a10 60%);color:var(--txt);font:15px system-ui,sans-serif}
@@ -27,12 +27,12 @@ button.active{outline:2px solid var(--green);background:#155b34}.row{display:fle
 .pill{border:1px solid #34465e;border-radius:11px;padding:11px;text-align:center;background:#0a111b;color:#cbd8e8;font-weight:750;cursor:pointer}
 .pill.active{border-color:var(--green);color:var(--green);background:#10251a}
 .hidden{display:none!important}.meter{height:9px;background:#26364a;border-radius:20px;overflow:hidden;margin-top:8px}.meter>i{display:block;height:100%;width:0;background:linear-gradient(90deg,#e8bd70,#39e66b)}
-.badge{display:inline-block;border:1px solid #34465e;border-radius:20px;padding:3px 8px;color:#b7c9df;font-size:11px}
+.badge{display:inline-block;border:1px solid #34465e;border-radius:20px;padding:3px 8px;color:#b7c9df;font-size:11px}.gate{display:flex;justify-content:space-between;gap:8px;padding:9px 0;border-bottom:1px solid #28384b;font-size:13px}
 @media(max-width:520px){.grid{grid-template-columns:1fr 1fr}.wrap{padding:15px 10px 35px}.logo{font-size:19px}}
 </style>
 </head>
 <body><main class="wrap">
-<div class="head"><div class="logo">LEVEL <span>UP</span> SIGNALS</div><div class="tag">PRO · v3.1</div></div>
+<div class="head"><div class="logo">LEVEL <span>UP</span> SIGNALS</div><div class="tag">PRO · v4.0</div></div>
 <h1>Торговый анализатор</h1>
 <p class="muted small">EMA 9/21 · RSI 14 · MACD 12/26/9 · сигналы по закрытым свечам</p>
 
@@ -76,18 +76,18 @@ button.active{outline:2px solid var(--green);background:#155b34}.row{display:fle
     <div class="metric"><span class="small muted">Последняя цена</span><b id="price">—</b></div>
     <div class="metric"><span class="small muted">RSI 14</span><b id="rsi">—</b></div>
     <div class="metric"><span class="small muted">EMA 9 / 21</span><b id="ema">—</b></div>
-    <div class="metric"><span class="small muted">MACD histogram</span><b id="macd">—</b></div>
+    <div class="metric"><span class="small muted">MACD histogram</span><b id="macd">—</b></div><div class="metric"><span class="small muted">ADX 14</span><b id="adx">—</b></div><div class="metric"><span class="small muted">ATR 14</span><b id="atr">—</b></div>
   </div>
   <div style="margin-top:14px"><div class="row" style="align-items:center"><b style="font-size:14px">Сила совпадения условий</b><span id="strengthText" class="badge">—</span></div><div class="meter"><i id="strengthBar"></i></div><p class="small muted">Это оценка совпадения технических фильтров, а не вероятность прибыльной сделки.</p></div>
-  <h3 style="font-size:15px;margin:18px 0 6px">Подтверждения</h3><div id="checks" class="small muted">Нет данных.</div>
+  <h3 style="font-size:15px;margin:18px 0 6px">Фильтры качества</h3><div id="checks" class="small muted">Нет данных.</div><div class="warn" style="margin-top:12px"><b>Защита от слабых сигналов.</b> Сигнал появляется только при совпадении тренда EMA 9/21/50, RSI, MACD, ADX, свечного подтверждения и достаточной волатильности. Если хотя бы один обязательный фильтр не пройден — WAIT.</div>
 </section>
 
 <section class="card">
   <h3 style="margin:0 0 10px;font-size:15px">Журнал сигналов</h3><div id="history" class="small muted">Пока пусто.</div>
   <div class="grid" style="margin-top:12px"><div class="metric"><span class="small muted">Отмечено вручную</span><b id="total">0</b></div><div class="metric"><span class="small muted">Доля плюсов</span><b id="rate">—</b></div></div>
 </section>
-<div class="warn"><b>Важно.</b> Это аналитический инструмент, не связанный с Pocket Option и не открывающий сделки. Обычные Forex-котировки не являются Pocket Option OTC. OTC-режим отключён, пока нет доступного и проверенного источника OTC-данных. Сигналы не гарантируют прибыль.</div>
-<div class="footer">LEVEL UP Signals · PRO 3.1 · signals only</div>
+<div class="warn"><b>Важно.</b> Это аналитический инструмент, не связанный с Pocket Option и не открывающий сделки. Обычные Forex-котировки не являются Pocket Option OTC. OTC-режим отключён, пока нет доступного и проверенного источника OTC-данных. Строгие фильтры могут часто показывать WAIT; это намеренная защита, а не гарантия прибыли.</div>
+<div class="footer">LEVEL UP Signals · PRO 4.0 · strict filters · signals only</div>
 </main>
 <script>
 const $=id=>document.getElementById(id);
@@ -99,15 +99,64 @@ function renderHistory(){let done=history.filter(x=>x.result),wins=done.filter(x
 function markResult(i,v){history[i].result=v;localStorage.setItem('lup_history_v3',JSON.stringify(history));renderHistory()}
 function addHistory(side,symbol,bar,mode){if(side==='ОЖИДАНИЕ'||bar===lastSignalBar)return;lastSignalBar=bar;history.unshift({time:new Date().toLocaleTimeString('ru-RU'),symbol,side,mode,result:''});history=history.slice(0,50);localStorage.setItem('lup_history_v3',JSON.stringify(history));renderHistory();tone()}
 function showStatus(id,msg){$(id).textContent=msg}
-function calculate(rows,symbol,mode){if(rows.length<30)throw Error('Нужно минимум 30 закрытых свечей.');let c=rows.map(x=>x.close),e9=ema(c,9),e21=ema(c,21),rv=rsi(c),m12=ema(c,12),m26=ema(c,26),ml=m12.map((v,i)=>v-m26[i]),ms=ema(ml,9),hist=ml.map((v,i)=>v-ms[i]),i=c.length-1;
-let up=e9[i]>e21[i]&&c[i]>e9[i],dn=e9[i]<e21[i]&&c[i]<e9[i],mu=ml[i]>ms[i]&&hist[i]>0,md=ml[i]<ms[i]&&hist[i]<0,ru=rv[i]>=50&&rv[i]<=68,rd=rv[i]<=50&&rv[i]>=32;
-let bullish=(up?1:0)+(mu?1:0)+(ru?1:0),bearish=(dn?1:0)+(md?1:0)+(rd?1:0),side=bullish===3?'CALL':bearish===3?'PUT':'ОЖИДАНИЕ',strength=Math.max(bullish,bearish)/3*100;
-$('signal').textContent=side;$('signal').className='signal '+(side==='CALL'?'call':side==='PUT'?'put':'wait');
-$('reason').textContent=side==='CALL'?'Тренд, RSI и MACD подтверждают движение вверх.':side==='PUT'?'Тренд, RSI и MACD подтверждают движение вниз.':'Нет полного совпадения фильтров — ожидание.';
-$('price').textContent=c[i].toFixed(6);$('rsi').textContent=rv[i]?.toFixed(1)??'—';$('ema').textContent=e9[i].toFixed(6)+' / '+e21[i].toFixed(6);$('macd').textContent=hist[i].toFixed(6);
-$('strengthText').textContent=Math.round(strength)+'% совпадений';$('strengthBar').style.width=strength+'%';
-$('checks').innerHTML=[['EMA trend',up||dn],['RSI filter',ru||rd],['MACD momentum',mu||md]].map(x=>`<div class="check"><span>${x[0]}</span><b style="color:${x[1]?'var(--green)':'var(--muted)'}">${x[1]?'Есть':'Нет'}</b></div>`).join('');
-let last=rows[i].time??rows[i].datetime??Date.now();addHistory(side,symbol,String(last),mode)}
+function trueRanges(rows){
+  return rows.map((x,i)=>i===0?x.high-x.low:Math.max(x.high-x.low,Math.abs(x.high-rows[i-1].close),Math.abs(x.low-rows[i-1].close)));
+}
+function sma(a,p,i){if(i+1<p)return null;let s=0;for(let j=i-p+1;j<=i;j++)s+=a[j];return s/p}
+function wilder(a,p){
+  let out=Array(a.length).fill(null),sum=0;
+  for(let i=0;i<a.length;i++){
+    if(i<p){sum+=a[i];if(i===p-1)out[i]=sum/p}
+    else out[i]=(out[i-1]*(p-1)+a[i])/p;
+  }
+  return out;
+}
+function adxCalc(rows,p=14){
+  let tr=[],plus=[],minus=[];
+  for(let i=0;i<rows.length;i++){
+    if(i===0){tr.push(rows[i].high-rows[i].low);plus.push(0);minus.push(0);continue}
+    let up=rows[i].high-rows[i-1].high,down=rows[i-1].low-rows[i].low;
+    plus.push(up>down&&up>0?up:0);minus.push(down>up&&down>0?down:0);
+    tr.push(Math.max(rows[i].high-rows[i].low,Math.abs(rows[i].high-rows[i-1].close),Math.abs(rows[i].low-rows[i-1].close)));
+  }
+  let atr=wilder(tr,p),pdm=wilder(plus,p),mdm=wilder(minus,p),dx=rows.map((_,i)=>{
+    if(!atr[i]||atr[i]===0)return null;
+    let a=100*pdm[i]/atr[i],b=100*mdm[i]/atr[i];return (a+b)===0?0:100*Math.abs(a-b)/(a+b);
+  });
+  let clean=dx.map(x=>x??0),adx=wilder(clean,p);
+  return {atr,adx,pdi:rows.map((_,i)=>atr[i]?100*pdm[i]/atr[i]:null),mdi:rows.map((_,i)=>atr[i]?100*mdm[i]/atr[i]:null)};
+}
+function calculate(rows,symbol,mode){
+  if(rows.length<60)throw Error('Для строгого фильтра нужно минимум 60 закрытых свечей.');
+  let c=rows.map(x=>x.close),e9=ema(c,9),e21=ema(c,21),e50=ema(c,50),rv=rsi(c),m12=ema(c,12),m26=ema(c,26),ml=m12.map((v,i)=>v-m26[i]),ms=ema(ml,9),hist=ml.map((v,i)=>v-ms[i]),i=c.length-1;
+  let dx=adxCalc(rows,14),a=dx.adx[i],atr=dx.atr[i],prev=rows[i-1],last=rows[i],atrPct=atr/c[i];
+  let trendUp=e9[i]>e21[i]&&e21[i]>e50[i]&&c[i]>e9[i]&&e21[i]>e21[i-3];
+  let trendDown=e9[i]<e21[i]&&e21[i]<e50[i]&&c[i]<e9[i]&&e21[i]<e21[i-3];
+  let macdUp=ml[i]>ms[i]&&hist[i]>0&&hist[i]>hist[i-1],macdDown=ml[i]<ms[i]&&hist[i]<0&&hist[i]<hist[i-1];
+  let rsiUp=rv[i]>=52&&rv[i]<=68,rsiDown=rv[i]>=32&&rv[i]<=48;
+  let adxOK=Number.isFinite(a)&&a>=18;
+  let candleUp=last.close>last.open&&last.close>prev.close;
+  let candleDown=last.close<last.open&&last.close<prev.close;
+  let volOK=Number.isFinite(atrPct)&&atrPct>=0.00002;
+  let directionUp=dx.pdi[i]>dx.mdi[i],directionDown=dx.mdi[i]>dx.pdi[i];
+  let gatesUp=[trendUp,rsiUp,macdUp,adxOK,candleUp,volOK,directionUp];
+  let gatesDown=[trendDown,rsiDown,macdDown,adxOK,candleDown,volOK,directionDown];
+  let upCount=gatesUp.filter(Boolean).length,downCount=gatesDown.filter(Boolean).length;
+  // Strict mode: all core filters and at least 6/7 total checks must agree.
+  let side=trendUp&&rsiUp&&macdUp&&adxOK&&candleUp&&volOK&&directionUp?'CALL':
+           trendDown&&rsiDown&&macdDown&&adxOK&&candleDown&&volOK&&directionDown?'PUT':'ОЖИДАНИЕ';
+  let strength=Math.max(upCount,downCount)/7*100;
+  $('signal').textContent=side;$('signal').className='signal '+(side==='CALL'?'call':side==='PUT'?'put':'wait');
+  $('reason').textContent=side==='CALL'?'Все 7 фильтров подтверждают рост. Проверяй риск перед входом.':
+    side==='PUT'?'Все 7 фильтров подтверждают снижение. Проверяй риск перед входом.':
+    'Защита включена: нет полного совпадения обязательных фильтров — вход заблокирован.';
+  $('price').textContent=c[i].toFixed(6);$('rsi').textContent=rv[i]?.toFixed(1)??'—';$('ema').textContent=e9[i].toFixed(6)+' / '+e21[i].toFixed(6);$('macd').textContent=hist[i].toFixed(6);
+  $('adx').textContent=Number.isFinite(a)?a.toFixed(1):'—';$('atr').textContent=Number.isFinite(atr)?atr.toFixed(6):'—';
+  $('strengthText').textContent=Math.round(strength)+'% фильтров';$('strengthBar').style.width=strength+'%';
+  let labels=[['Тренд EMA 9/21/50',trendUp||trendDown],['RSI без перекупленности/перепроданности',rsiUp||rsiDown],['MACD усиливает движение',macdUp||macdDown],['ADX ≥ 18 (не слабый тренд)',adxOK],['Свеча подтверждает направление',candleUp||candleDown],['Волатильность достаточная',volOK],['DI подтверждает направление',directionUp||directionDown]];
+  $('checks').innerHTML=labels.map(x=>`<div class="check"><span>${x[0]}</span><b style="color:${x[1]?'var(--green)':'var(--red)'}">${x[1]?'Пройден':'Не пройден'}</b></div>`).join('');
+  let lastBar=rows[i].time??rows[i].datetime??Date.now();addHistory(side,symbol,String(lastBar),mode);
+}
 function setMode(mode){activeMode=mode;$('tabForex').classList.toggle('active',mode==='forex');$('tabOtc').classList.toggle('active',mode==='otc');$('forexPanel').classList.toggle('hidden',mode!=='forex');$('otcPanel').classList.toggle('hidden',mode!=='otc');$('signal').textContent='ОЖИДАНИЕ';$('signal').className='signal wait';$('reason').textContent=mode==='otc'?'OTC-котировки временно недоступны: бесплатный API OTCharts приостановлен.':'Выбран режим Forex. Ожидаются данные.'}
 $('tabForex').onclick=()=>setMode('forex');$('tabOtc').onclick=()=>setMode('otc');
 async function fetchForex(){if(forexBusy)return;forexBusy=true;try{let key=$('key').value.trim();if(!key)throw Error('Введи API Key Twelve Data.');let interval=$('interval').value,mins=parseInt(interval),u=new URL('https://api.twelvedata.com/time_series');u.searchParams.set('symbol',$('symbol').value);u.searchParams.set('interval',interval);u.searchParams.set('outputsize','150');u.searchParams.set('timezone','UTC');u.searchParams.set('apikey',key);showStatus('forexStatus','Запрашиваем рыночные Forex-котировки…');let res=await fetch(u);if(!res.ok)throw Error('HTTP '+res.status);let d=await res.json();if(d.status==='error'||!Array.isArray(d.values))throw Error(d.message||'Не удалось получить свечи.');let now=Date.now(),rows=d.values.map(v=>({datetime:v.datetime,open:+v.open,high:+v.high,low:+v.low,close:+v.close,closed:Date.parse(v.datetime.replace(' ','T')+'Z')+mins*60000<=now})).filter(x=>[x.open,x.high,x.low,x.close].every(Number.isFinite)&&x.closed).reverse();calculate(rows,$('symbol').value,'FOREX');showStatus('forexStatus','Подключено · '+d.meta.symbol+' · '+rows.length+' закрытых свечей · проверка раз в 60 секунд. '+new Date().toLocaleTimeString('ru-RU'))}catch(e){showStatus('forexStatus','Ошибка: '+e.message)}finally{forexBusy=false}}
