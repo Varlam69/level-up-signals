@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#090b12">
 <link rel="manifest" href="manifest.webmanifest">
-<title>LEVEL UP Signals PRO 3.0</title>
+<title>LEVEL UP Signals PRO 3.1</title>
 <style>
 :root{--bg:#080a10;--line:#2b3b51;--txt:#eef4ff;--muted:#96a5ba;--green:#39e66b;--red:#ff5968;--gold:#e8bd70;--blue:#6eb6ff}
 *{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at top,#162840,#080a10 60%);color:var(--txt);font:15px system-ui,sans-serif}
@@ -32,14 +32,14 @@ button.active{outline:2px solid var(--green);background:#155b34}.row{display:fle
 </style>
 </head>
 <body><main class="wrap">
-<div class="head"><div class="logo">LEVEL <span>UP</span> SIGNALS</div><div class="tag">PRO · v3.0</div></div>
+<div class="head"><div class="logo">LEVEL <span>UP</span> SIGNALS</div><div class="tag">PRO · v3.1</div></div>
 <h1>Торговый анализатор</h1>
 <p class="muted small">EMA 9/21 · RSI 14 · MACD 12/26/9 · сигналы по закрытым свечам</p>
 
 <section class="card">
   <div class="tabs">
     <div id="tabForex" class="pill active" role="button" tabindex="0">FOREX / CRYPTO</div>
-    <div id="tabOtc" class="pill" role="button" tabindex="0" style="opacity:.4;pointer-events:none">POCKET OPTION OTC (ВРЕМЕННО НЕДОСТУПЕН)</div>
+    <div id="tabOtc" class="pill" role="button" tabindex="0">POCKET OPTION OTC · PAUSED</div>
   </div>
   <div id="forexPanel" style="margin-top:14px">
     <div class="grid">
@@ -51,18 +51,21 @@ button.active{outline:2px solid var(--green);background:#155b34}.row{display:fle
     <div id="forexStatus" class="status">Forex не подключён. Ключ Twelve Data используется только в этом браузере.</div>
   </div>
   <div id="otcPanel" class="hidden" style="margin-top:14px">
-    <div class="grid">
-      <div><label>Категория OTC</label><select id="otcCategory">
-        <option value="forex">Forex OTC</option><option value="crypto">Crypto OTC</option><option value="stocks">Stocks OTC</option><option value="indices">Indices OTC</option>
-      </select></div>
-      <div><label>Инструмент OTC</label><select id="otcSymbol"><option value="">Загрузи список инструментов</option></select></div>
-      <div><label>Таймфрейм</label><select id="otcInterval"><option value="60" selected>1 минута (M1)</option><option value="300">5 минут</option><option value="900">15 минут</option></select></div>
-      <div><label>Поток котировок</label><div class="metric"><b id="streamState">Отключён</b></div></div>
-      <div class="full row"><button id="loadOtc">Загрузить OTC</button><button id="stopOtc" class="secondary">Остановить OTC</button></div>
-      <div class="full"><button id="refreshSymbols" class="secondary">Обновить список OTC-инструментов</button></div>
+    <div class="warn" style="border-left-color:var(--gold)">
+      <b>Бесплатный режим OTC без API.</b><br>
+      Бесплатный API OTCharts сообщает о приостановке доступа из-за высокой нагрузки. Поэтому сайт не подменяет OTC обычными Forex-котировками и не показывает выдуманные сигналы.
     </div>
-    <div id="otcStatus" class="status">Для OTC нужен сервер-посредник с настроенным секретом OTCHARTS_API_KEY. Ключ не вводится на этой странице.</div>
-    <p class="small muted">Данные Pocket Option OTC поступают из отдельной OTC-серии OTCharts. Они не являются обычными рыночными котировками Twelve Data.</p>
+    <div class="card" style="margin:12px 0;background:#0b1420">
+      <div style="font-weight:850;font-size:17px">EUR/USD OTC · Pocket Option</div>
+      <p class="small muted">Открыть актуальную страницу анализа OTCharts. На ней показаны цена из фида Pocket Option и сводка индикаторов на 1, 5 и 15 минут.</p>
+      <a href="https://otcharts.com/otc-chart-analysis/pocket-option-eur-usd" target="_blank" rel="noopener" style="display:block;text-decoration:none;text-align:center;background:#176e39;color:white;padding:13px;border-radius:11px;font-weight:800">Открыть живой анализ EUR/USD OTC ↗</a>
+    </div>
+    <div class="card" style="margin:12px 0;background:#0b1420">
+      <div style="font-weight:850">Другие OTC-пары</div>
+      <p class="small muted">Открой общий раздел OTC и выбери источник Pocket Option, а не Quotex или другого брокера.</p>
+      <a href="https://otcharts.com/otc-chart-analysis/" target="_blank" rel="noopener" style="display:block;text-decoration:none;text-align:center;background:#202d40;border:1px solid #3a4c64;color:#eef4ff;padding:12px;border-radius:11px;font-weight:750">Все OTC-инструменты OTCharts ↗</a>
+    </div>
+    <p class="small muted">Важно: сводка индикаторов описывает прошлое движение цены, но не гарантирует направление следующей свечи. Сверяй пару и цену с графиком Pocket Option.</p>
   </div>
 </section>
 
@@ -83,13 +86,12 @@ button.active{outline:2px solid var(--green);background:#155b34}.row{display:fle
   <h3 style="margin:0 0 10px;font-size:15px">Журнал сигналов</h3><div id="history" class="small muted">Пока пусто.</div>
   <div class="grid" style="margin-top:12px"><div class="metric"><span class="small muted">Отмечено вручную</span><b id="total">0</b></div><div class="metric"><span class="small muted">Доля плюсов</span><b id="rate">—</b></div></div>
 </section>
-<div class="warn"><b>Важно.</b> Это аналитический инструмент, не связанный с Pocket Option и не открывающий сделки. OTCharts — независимый поставщик данных, не официальный API Pocket Option. Для OTC используется только каталог и котировки OTCharts. OTC-цены отличаются от обычного Forex/биржевых цен. Сигналы не гарантируют прибыль. Не вводи OTCharts API-ключ в HTML: он должен храниться в секретах серверного посредника.</div>
-<div class="footer">LEVEL UP Signals · PRO 3.0 · signals only</div>
+<div class="warn"><b>Важно.</b> Это аналитический инструмент, не связанный с Pocket Option и не открывающий сделки. Обычные Forex-котировки не являются Pocket Option OTC. OTC-режим отключён, пока нет доступного и проверенного источника OTC-данных. Сигналы не гарантируют прибыль.</div>
+<div class="footer">LEVEL UP Signals · PRO 3.1 · signals only</div>
 </main>
 <script>
 const $=id=>document.getElementById(id);
-const API_BASE='https://level-up-otc-proxy.buinglu.workers.dev/api/otc';
-let forexTimer=null,forexBusy=false,otcSource=null,otcBars=[],history=JSON.parse(localStorage.getItem('lup_history_v3')||'[]'),lastSignalBar='',activeMode='forex',otcCatalogue=[];
+let forexTimer=null,forexBusy=false,history=JSON.parse(localStorage.getItem('lup_history_v3')||'[]'),lastSignalBar='',activeMode='forex';
 function ema(a,p){let k=2/(p+1),r=[],v=null;for(const x of a){v=v===null?x:x*k+v*(1-k);r.push(v)}return r}
 function rsi(a,p=14){let out=Array(a.length).fill(null);if(a.length<=p)return out;let g=0,l=0;for(let i=1;i<=p;i++){let d=a[i]-a[i-1];g+=Math.max(0,d);l+=Math.max(0,-d)}g/=p;l/=p;out[p]=l===0?100:100-100/(1+g/l);for(let i=p+1;i<a.length;i++){let d=a[i]-a[i-1];g=(g*(p-1)+Math.max(0,d))/p;l=(l*(p-1)+Math.max(0,-d))/p;out[i]=l===0?100:100-100/(1+g/l)}return out}
 function tone(){try{let c=new(window.AudioContext||window.webkitAudioContext)(),o=c.createOscillator(),g=c.createGain();o.frequency.value=820;g.gain.setValueAtTime(.001,c.currentTime);g.gain.exponentialRampToValueAtTime(.07,c.currentTime+.04);g.gain.exponentialRampToValueAtTime(.001,c.currentTime+.35);o.connect(g);g.connect(c.destination);o.start();o.stop(c.currentTime+.38);setTimeout(()=>c.close(),500)}catch(e){}}
@@ -106,20 +108,11 @@ $('price').textContent=c[i].toFixed(6);$('rsi').textContent=rv[i]?.toFixed(1)??'
 $('strengthText').textContent=Math.round(strength)+'% совпадений';$('strengthBar').style.width=strength+'%';
 $('checks').innerHTML=[['EMA trend',up||dn],['RSI filter',ru||rd],['MACD momentum',mu||md]].map(x=>`<div class="check"><span>${x[0]}</span><b style="color:${x[1]?'var(--green)':'var(--muted)'}">${x[1]?'Есть':'Нет'}</b></div>`).join('');
 let last=rows[i].time??rows[i].datetime??Date.now();addHistory(side,symbol,String(last),mode)}
-function setMode(mode){activeMode=mode;$('tabForex').classList.toggle('active',mode==='forex');$('tabOtc').classList.toggle('active',mode==='otc');$('forexPanel').classList.toggle('hidden',mode!=='forex');$('otcPanel').classList.toggle('hidden',mode!=='otc');$('signal').textContent='ОЖИДАНИЕ';$('signal').className='signal wait';$('reason').textContent='Выбран режим '+(mode==='otc'?'Pocket Option OTC':'Forex / Crypto')+'. Ожидаются данные.'}
+function setMode(mode){activeMode=mode;$('tabForex').classList.toggle('active',mode==='forex');$('tabOtc').classList.toggle('active',mode==='otc');$('forexPanel').classList.toggle('hidden',mode!=='forex');$('otcPanel').classList.toggle('hidden',mode!=='otc');$('signal').textContent='ОЖИДАНИЕ';$('signal').className='signal wait';$('reason').textContent=mode==='otc'?'OTC-котировки временно недоступны: бесплатный API OTCharts приостановлен.':'Выбран режим Forex. Ожидаются данные.'}
 $('tabForex').onclick=()=>setMode('forex');$('tabOtc').onclick=()=>setMode('otc');
-async function fetchForex(){if(forexBusy)return;forexBusy=true;try{let key=$('key').value.trim();if(!key)throw Error('Введи API Key Twelve Data.');let interval=$('interval').value,mins=parseInt(interval),u=new URL('https://api.twelvedata.com/time_series');u.searchParams.set('symbol',$('symbol').value);u.searchParams.set('interval',interval);u.searchParams.set('outputsize','150');u.searchParams.set('timezone','UTC');u.searchParams.set('apikey',key);showStatus('forexStatus','Запрашиваем Forex-котировки…');let res=await fetch(u);if(!res.ok)throw Error('HTTP '+res.status);let d=await res.json();if(d.status==='error'||!Array.isArray(d.values))throw Error(d.message||'Не удалось получить свечи.');let now=Date.now(),rows=d.values.map(v=>({datetime:v.datetime,open:+v.open,high:+v.high,low:+v.low,close:+v.close,closed:Date.parse(v.datetime.replace(' ','T')+'Z')+mins*60000<=now})).filter(x=>[x.open,x.high,x.low,x.close].every(Number.isFinite)&&x.closed).reverse();calculate(rows,$('symbol').value,'FOREX');showStatus('forexStatus','Подключено · '+d.meta.symbol+' · '+rows.length+' закрытых свечей · проверка раз в 60 секунд. '+new Date().toLocaleTimeString('ru-RU'))}catch(e){showStatus('forexStatus','Ошибка: '+e.message)}finally{forexBusy=false}}
+async function fetchForex(){if(forexBusy)return;forexBusy=true;try{let key=$('key').value.trim();if(!key)throw Error('Введи API Key Twelve Data.');let interval=$('interval').value,mins=parseInt(interval),u=new URL('https://api.twelvedata.com/time_series');u.searchParams.set('symbol',$('symbol').value);u.searchParams.set('interval',interval);u.searchParams.set('outputsize','150');u.searchParams.set('timezone','UTC');u.searchParams.set('apikey',key);showStatus('forexStatus','Запрашиваем рыночные Forex-котировки…');let res=await fetch(u);if(!res.ok)throw Error('HTTP '+res.status);let d=await res.json();if(d.status==='error'||!Array.isArray(d.values))throw Error(d.message||'Не удалось получить свечи.');let now=Date.now(),rows=d.values.map(v=>({datetime:v.datetime,open:+v.open,high:+v.high,low:+v.low,close:+v.close,closed:Date.parse(v.datetime.replace(' ','T')+'Z')+mins*60000<=now})).filter(x=>[x.open,x.high,x.low,x.close].every(Number.isFinite)&&x.closed).reverse();calculate(rows,$('symbol').value,'FOREX');showStatus('forexStatus','Подключено · '+d.meta.symbol+' · '+rows.length+' закрытых свечей · проверка раз в 60 секунд. '+new Date().toLocaleTimeString('ru-RU'))}catch(e){showStatus('forexStatus','Ошибка: '+e.message)}finally{forexBusy=false}}
 $('connectForex').onclick=()=>{if(forexTimer)clearInterval(forexTimer);fetchForex();forexTimer=setInterval(()=>{if(document.visibilityState==='visible')fetchForex()},60000)};
 $('stopForex').onclick=()=>{if(forexTimer)clearInterval(forexTimer);forexTimer=null;showStatus('forexStatus','Автообновление Forex остановлено.')};
-function classify(s){let v=(s.symbol+' '+s.name).toLowerCase();if(v.includes('#')||/apple|amazon|google|microsoft|tesla|boeing|stock|shares/.test(v))return 'stocks';if(/btc|bitcoin|eth|ethereum|sol|crypto|doge|litecoin|ltc|ada|xrp/.test(v))return 'crypto';if(/index|nasdaq|s&p|dow|dax|ftse|nikkei|us30|spx|ndx|dj/.test(v))return 'indices';return 'forex'}
-async function otcFetch(path){let r=await fetch(API_BASE+path,{headers:{'Accept':'application/json'}});let data=await r.json().catch(()=>({}));if(!r.ok)throw Error(data.error||data.message||('OTC proxy HTTP '+r.status));return data}
-async function loadSymbols(){try{showStatus('otcStatus','Получаем каталог Pocket Option OTC…');let d=await otcFetch('/symbols?venue=otc');otcCatalogue=(d.symbols||[]).filter(s=>s.isOtc!==false);populateSymbols();showStatus('otcStatus','Каталог получен: '+otcCatalogue.length+' OTC-инструментов. Выбери категорию и инструмент.')}catch(e){showStatus('otcStatus','Не удалось получить каталог: '+e.message+'. Проверь Worker, секрет OTCHARTS_API_KEY и доступ тарифа.');}}
-function populateSymbols(){let cat=$('otcCategory').value,arr=otcCatalogue.filter(s=>classify(s)===cat);$('otcSymbol').innerHTML='';if(!arr.length){$('otcSymbol').innerHTML='<option value="">Нет инструментов этой категории в каталоге</option>';return}for(let s of arr){let o=document.createElement('option');o.value=s.symbol;o.textContent=s.name+' · '+s.symbol+(s.open===false?' · закрыт':'');o.disabled=s.open===false;$('otcSymbol').appendChild(o)}}
-$('otcCategory').onchange=populateSymbols;$('refreshSymbols').onclick=loadSymbols;
-function stopOtc(){if(otcSource){otcSource.close();otcSource=null}$('streamState').textContent='Отключён'}
-async function loadOtc(){stopOtc();try{let symbol=$('otcSymbol').value;if(!symbol)throw Error('Сначала выбери доступный OTC-инструмент.');let tf=$('otcInterval').value;showStatus('otcStatus','Загружаем исторические OTC-свечи…');let d=await otcFetch('/candles?venue=otc&symbol='+encodeURIComponent(symbol)+'&tf='+tf+'&limit=150');let candles=d.candles||[];if(candles.length<30)throw Error('OTCharts вернул меньше 30 свечей.');if(d.gaps&&d.gaps.runs>0)showStatus('otcStatus','В истории есть разрывы: '+d.gaps.missingBars+' пропущенных свечей. Сигнал может быть ненадёжным.');otcBars=candles.map(x=>({time:x.time,open:+x.open,high:+x.high,low:+x.low,close:+x.close})).filter(x=>[x.open,x.high,x.low,x.close,x.time].every(Number.isFinite));calculate(otcBars,symbol,'OTC');showStatus('otcStatus','OTC подключён · '+symbol+' · '+otcBars.length+' свечей · ожидание потока новых котировок.');startOtcStream(symbol,tf)}catch(e){showStatus('otcStatus','Ошибка OTC: '+e.message)}}
-function startOtcStream(symbol,tf){let url=API_BASE+'/stream?venue=otc&symbol='+encodeURIComponent(symbol);otcSource=new EventSource(url);$('streamState').textContent='Подключение…';otcSource.addEventListener('connected',()=>{$('streamState').textContent='Подключён';showStatus('otcStatus','Поток OTCharts подключён · '+symbol+'. Новая свеча подтверждается при смене минутного интервала.')});otcSource.addEventListener('tick',ev=>{try{let t=JSON.parse(ev.data);if(t.symbol!==symbol||!Number.isFinite(+t.price))return;let step=+tf,bucket=Math.floor((+t.time)/step)*step,cur=otcBars[otcBars.length-1];if(!cur){otcBars.push({time:bucket,open:+t.price,high:+t.price,low:+t.price,close:+t.price});return}let curBucket=Math.floor(cur.time/step)*step;if(bucket===curBucket){cur.high=Math.max(cur.high,+t.price);cur.low=Math.min(cur.low,+t.price);cur.close=+t.price}else if(bucket>curBucket){if(bucket-curBucket===step){otcBars.push({time:bucket,open:+t.price,high:+t.price,low:+t.price,close:+t.price});otcBars=otcBars.slice(-500);calculate(otcBars,symbol,'OTC')}else{showStatus('otcStatus','Обнаружен разрыв потока. Перезагрузи свечи перед использованием сигналов.');stopOtc()}}}catch(e){}});otcSource.onerror=()=>{$('streamState').textContent='Переподключение / ошибка';showStatus('otcStatus','Поток OTC прерван или отклонён. Проверь тариф OTCharts и сервер-посредник.');}}
-$('loadOtc').onclick=loadOtc;$('stopOtc').onclick=()=>{stopOtc();showStatus('otcStatus','Поток OTC остановлен.')};
 renderHistory();
 </script>
 </body></html>
